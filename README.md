@@ -1,2 +1,11 @@
-# windows-telemetry-inspector
-A passive Windows telemetry and network inspector that reveals which components communicate, when they do it, where they connect, and how much data is exchanged — transparently and without interference.
+# Windows Telemetry Inspector
+
+A passive observability tool to understand
+which Windows components talk to the network,
+when they do it, where they connect to,
+and how much data is exchanged.
+
+- No blocking
+- No MITM
+- User-mode only
+- ETW-based
