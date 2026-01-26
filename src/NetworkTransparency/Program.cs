@@ -646,48 +646,47 @@ internal sealed record TaskInfo(string Name, DateTime? LastRunUtc);
 
 internal static class Classifier
 {
-    private static readonly string[] UpdateServices =
-    [
+    private static readonly HashSet<string> UpdateServices = new(StringComparer.OrdinalIgnoreCase)
+    {
         "wuauserv", "UsoSvc", "DoSvc", "WaaSMedicSvc", "BITS"
-    ];
+    };
 
-    private static readonly string[] DefenderServices =
-    [
+    private static readonly HashSet<string> DefenderServices = new(StringComparer.OrdinalIgnoreCase)
+    {
         "WinDefend", "WdNisSvc", "SecurityHealthService"
-    ];
+    };
 
-    private static readonly string[] StoreServices =
-    [
+    private static readonly HashSet<string> StoreServices = new(StringComparer.OrdinalIgnoreCase)
+    {
         "InstallService", "ClipSVC", "LicenseManager"
-    ];
+    };
 
-    private static readonly string[] TimeServices =
-    [
+    private static readonly HashSet<string> TimeServices = new(StringComparer.OrdinalIgnoreCase)
+    {
         "W32Time"
-    ];
+    };
 
     public static ClassificationResult Classify(ProcessInfo processInfo, IReadOnlyList<string> services, IReadOnlyList<string> dnsNames)
     {
         var lowerProcess = processInfo.ProcessName.ToLowerInvariant();
-        var lowerServices = services.Select(s => s.ToLowerInvariant()).ToList();
         var lowerDns = dnsNames.Select(d => d.ToLowerInvariant()).ToList();
 
-        if (lowerServices.Any(s => UpdateServices.Contains(s)) || lowerProcess.Contains("wuauclt"))
+        if (services.Any(s => UpdateServices.Contains(s)) || lowerProcess.Contains("wuauclt"))
         {
             return new ClassificationResult("Windows Update", 0.8);
         }
 
-        if (lowerServices.Any(s => DefenderServices.Contains(s)) || lowerProcess.Contains("msmpeng"))
+        if (services.Any(s => DefenderServices.Contains(s)) || lowerProcess.Contains("msmpeng"))
         {
             return new ClassificationResult("Defender", 0.8);
         }
 
-        if (lowerServices.Any(s => StoreServices.Contains(s)) || lowerProcess.Contains("wsappx"))
+        if (services.Any(s => StoreServices.Contains(s)) || lowerProcess.Contains("wsappx"))
         {
             return new ClassificationResult("Store", 0.7);
         }
 
-        if (lowerServices.Any(s => TimeServices.Contains(s)) || lowerDns.Any(d => d.Contains("time.windows.com")))
+        if (services.Any(s => TimeServices.Contains(s)) || lowerDns.Any(d => d.Contains("time.windows.com")))
         {
             return new ClassificationResult("Time Sync", 0.7);
         }
