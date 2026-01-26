@@ -3,7 +3,7 @@
 A Windows 11 **Network Transparency** tool that passively observes which components talk to the network, when they do it, where they connect, and how much data is exchanged — **without blocking traffic, MITM, or kernel drivers**.
 
 ## What it does
-- **ETW-based passive capture** of TCP/UDP events (connect/send/recv) and DNS client events.
+- **ETW-based passive capture** of TCP/UDP events (connect/send/recv) and DNS client events (DNS name correlation currently uses responses).
 - Correlates **PID → process name → service names** (when hosted in `svchost` or service-hosted processes).
 - Best-effort **"why" correlation** by checking scheduled tasks that ran near the network burst.
 - Classifies activity into likely categories such as **Windows Update**, **Defender**, **Telemetry**, **Store**, **Time Sync**, or **Other** with a confidence score.
