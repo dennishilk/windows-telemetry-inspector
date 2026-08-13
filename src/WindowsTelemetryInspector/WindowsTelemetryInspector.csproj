@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>WindowsTelemetryInspector</AssemblyName>
+    <RootNamespace>WindowsTelemetryInspector</RootNamespace>
+    <ApplicationIcon>Assets\WindowsTelemetryInspector.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Product>Windows Telemetry Inspector</Product>
+    <Title>Windows Telemetry Inspector</Title>
+    <Description>Passive Windows ETW network diagnostics.</Description>
+    <Authors>Dennis Hilk</Authors>
+    <Company>Dennis Hilk</Company>
+    <Copyright>Copyright © 2026 Dennis Hilk</Copyright>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NetworkTransparency.Core\NetworkTransparency.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\WindowsTelemetryInspector.ico" />
+  </ItemGroup>
+</Project>

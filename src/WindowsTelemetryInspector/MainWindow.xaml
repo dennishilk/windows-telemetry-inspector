@@ -1,0 +1,279 @@
+<Window x:Class="WindowsTelemetryInspector.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        mc:Ignorable="d"
+        Title="Windows Telemetry Inspector"
+        Width="1440"
+        Height="900"
+        MinWidth="1100"
+        MinHeight="680"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="CanResize"
+        Icon="Assets/WindowsTelemetryInspector.ico">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="36"
+                            ResizeBorderThickness="6"
+                            GlassFrameThickness="0"
+                            CornerRadius="7"
+                            UseAeroCaptionButtons="False" />
+    </shell:WindowChrome.WindowChrome>
+
+    <Grid Background="{StaticResource WindowBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="36" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="32" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="#050B11" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1"
+                MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" Margin="10,0,0,0" VerticalAlignment="Center">
+                    <Image Source="Assets/WindowsTelemetryInspector.ico" Width="18" Height="18" Margin="0,0,8,0" />
+                    <TextBlock Text="Windows Telemetry Inspector" FontSize="12" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" shell:WindowChrome.IsHitTestVisibleInChrome="True">
+                    <Button Style="{StaticResource TitleBarButtonStyle}" Content="—" ToolTip="Minimize" AutomationProperties.Name="Minimize window" Click="Minimize_Click" />
+                    <Button x:Name="MaximizeButton" Style="{StaticResource TitleBarButtonStyle}" Content="□" ToolTip="Maximize" AutomationProperties.Name="Maximize or restore window" Click="Maximize_Click" />
+                    <Button Content="✕" ToolTip="Close" AutomationProperties.Name="Close window" Click="Close_Click">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource TitleBarButtonStyle}">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#C42B1C" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="235" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Background="{StaticResource SidebarBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="112" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Margin="18,15,12,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="42" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Width="38" Height="38" CornerRadius="8" Background="#102A3D" VerticalAlignment="Top">
+                            <Image Source="Assets/WindowsTelemetryInspector.ico" Width="32" Height="32" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                            <TextBlock Text="Windows" FontWeight="SemiBold" FontSize="15" />
+                            <TextBlock Text="Telemetry Inspector" FontWeight="SemiBold" FontSize="15" />
+                            <TextBlock Text="Passive ETW diagnostics" Style="{StaticResource MutedTextStyle}" FontSize="11" Margin="0,5,0,0" />
+                        </StackPanel>
+                    </Grid>
+
+                    <ListBox Grid.Row="1"
+                             ItemsSource="{Binding Navigation}"
+                             SelectedItem="{Binding SelectedNavigation}"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             ItemContainerStyle="{StaticResource NavItemStyle}"
+                             AutomationProperties.Name="Application sections"
+                             KeyboardNavigation.TabNavigation="Continue">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Border Height="1" Background="{StaticResource BorderBrush}" Margin="0,0,0,8"
+                                            Visibility="{Binding DividerBefore, Converter={StaticResource BoolToVisibility}}" />
+                                    <Grid Grid.Row="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="28" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Glyph}" Foreground="{StaticResource MutedTextBrush}" FontSize="16" />
+                                        <TextBlock Grid.Column="1" Text="{Binding Name}" />
+                                        <Border Grid.Column="2" Background="#142637" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+                                                CornerRadius="4" Padding="6,2" MinWidth="27"
+                                                Visibility="{Binding HasCounter, Converter={StaticResource BoolToVisibility}}">
+                                            <TextBlock Text="{Binding Count, StringFormat={}{0:N0}}" Foreground="{StaticResource MutedTextBrush}" FontSize="11" HorizontalAlignment="Center" />
+                                        </Border>
+                                    </Grid>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <Border Grid.Row="2" Style="{StaticResource CardStyle}" Margin="12" Padding="12">
+                        <StackPanel>
+                            <TextBlock Text="Capture output" Foreground="#8FCFFF" FontWeight="SemiBold" FontSize="11" />
+                            <TextBlock Text="{Binding Workspace.CurrentCapturePath}" Foreground="{StaticResource MutedTextBrush}"
+                                       FontSize="10" TextWrapping="Wrap" Margin="0,8,0,10" MaxHeight="48" ToolTip="{Binding Workspace.CurrentCapturePath}" />
+                            <Button Content="Open Folder" Command="{Binding OpenFolderCommand}" HorizontalAlignment="Stretch" AutomationProperties.Name="Open capture folder" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="94" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Style="{StaticResource CardStyle}" Margin="12,12,12,6" Padding="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2.2*" />
+                            <ColumnDefinition Width="0.72*" />
+                            <ColumnDefinition Width="0.72*" />
+                            <ColumnDefinition Width="0.72*" />
+                            <ColumnDefinition Width="0.72*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Padding="16,0" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
+                            <StackPanel VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <Ellipse Width="10" Height="10" Margin="0,0,9,0">
+                                        <Ellipse.Style>
+                                            <Style TargetType="Ellipse">
+                                                <Setter Property="Fill" Value="{StaticResource FaintTextBrush}" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Workspace.IsCapturing}" Value="True">
+                                                        <Setter Property="Fill" Value="{StaticResource SuccessBrush}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Workspace.HasError}" Value="True">
+                                                        <Setter Property="Fill" Value="{StaticResource DangerBrush}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Ellipse.Style>
+                                    </Ellipse>
+                                    <TextBlock Text="{Binding Workspace.CaptureStateLabel}" FontWeight="Bold">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{StaticResource MutedTextBrush}" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Workspace.IsCapturing}" Value="True">
+                                                        <Setter Property="Foreground" Value="{StaticResource SuccessBrush}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Workspace.HasError}" Value="True">
+                                                        <Setter Property="Foreground" Value="{StaticResource DangerBrush}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
+                                <TextBlock Text="{Binding Workspace.StatusMessage}" Foreground="{StaticResource TextBrush}" FontSize="12"
+                                           TextTrimming="CharacterEllipsis" Margin="19,6,8,0" ToolTip="{Binding Workspace.StatusMessage}" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="1" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
+                            <StackPanel VerticalAlignment="Center" Margin="14,0">
+                                <TextBlock Text="Runtime" Style="{StaticResource MutedTextStyle}" FontSize="11" />
+                                <TextBlock Text="{Binding Workspace.RuntimeText}" FontWeight="SemiBold" FontSize="15" Margin="0,4,0,0" />
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="2" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
+                            <StackPanel VerticalAlignment="Center" Margin="14,0">
+                                <TextBlock Text="Events" Style="{StaticResource MutedTextStyle}" FontSize="11" />
+                                <TextBlock Text="{Binding Workspace.DisplayEventCount, StringFormat={}{0:N0}}" FontWeight="SemiBold" FontSize="15" Margin="0,4,0,0" />
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="3" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
+                            <StackPanel VerticalAlignment="Center" Margin="14,0">
+                                <TextBlock Text="Sent" Style="{StaticResource MutedTextStyle}" FontSize="11" />
+                                <TextBlock Text="{Binding Workspace.DisplayBytesSent, Converter={StaticResource BytesConverter}}" FontWeight="SemiBold" FontSize="15" Margin="0,4,0,0" />
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="4" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
+                            <StackPanel VerticalAlignment="Center" Margin="14,0">
+                                <TextBlock Text="Received" Style="{StaticResource MutedTextStyle}" FontSize="11" />
+                                <TextBlock Text="{Binding Workspace.DisplayBytesReceived, Converter={StaticResource BytesConverter}}" FontWeight="SemiBold" FontSize="15" Margin="0,4,0,0" />
+                            </StackPanel>
+                        </Border>
+
+                        <StackPanel Grid.Column="5" Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0">
+                            <Button Content="Start Capture" Style="{StaticResource PrimaryButtonStyle}" Command="{Binding StartCaptureCommand}"
+                                    Visibility="{Binding Workspace.IsCapturing, Converter={StaticResource InverseBoolToVisibility}}"
+                                    AutomationProperties.Name="Start passive capture" Margin="0,0,8,0" />
+                            <Button Content="Stop Capture" Style="{StaticResource DangerButtonStyle}" Command="{Binding StopCaptureCommand}"
+                                    Visibility="{Binding Workspace.IsCapturing, Converter={StaticResource BoolToVisibility}}"
+                                    AutomationProperties.Name="Stop active capture" Margin="0,0,8,0" />
+                            <Button Content="Restart as administrator" Command="{Binding RestartElevatedCommand}"
+                                    Visibility="{Binding Workspace.IsElevated, Converter={StaticResource InverseBoolToVisibility}}"
+                                    AutomationProperties.Name="Restart Windows Telemetry Inspector as administrator" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <ContentControl Grid.Row="1" Content="{Binding CurrentPage}" Margin="12,6,12,10" />
+            </Grid>
+        </Grid>
+
+        <Border Grid.Row="2" Background="#08131D" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0">
+            <Grid Margin="14,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,18,0">
+                    <Ellipse Width="7" Height="7" Fill="{StaticResource SuccessBrush}" Margin="0,0,6,0">
+                        <Ellipse.Style>
+                            <Style TargetType="Ellipse">
+                                <Setter Property="Opacity" Value="0.25" />
+                                <Style.Triggers><DataTrigger Binding="{Binding Workspace.KernelProviderActive}" Value="True"><Setter Property="Opacity" Value="1" /></DataTrigger></Style.Triggers>
+                            </Style>
+                        </Ellipse.Style>
+                    </Ellipse>
+                    <TextBlock Text="ETW kernel" Foreground="{StaticResource MutedTextBrush}" FontSize="11" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,18,0">
+                    <Ellipse Width="7" Height="7" Fill="{StaticResource SuccessBrush}" Margin="0,0,6,0">
+                        <Ellipse.Style>
+                            <Style TargetType="Ellipse">
+                                <Setter Property="Opacity" Value="0.25" />
+                                <Style.Triggers><DataTrigger Binding="{Binding Workspace.DnsProviderActive}" Value="True"><Setter Property="Opacity" Value="1" /></DataTrigger></Style.Triggers>
+                            </Style>
+                        </Ellipse.Style>
+                    </Ellipse>
+                    <TextBlock Text="DNS correlation" Foreground="{StaticResource MutedTextBrush}" FontSize="11" />
+                </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <Ellipse Width="7" Height="7" Fill="{StaticResource SuccessBrush}" Margin="0,0,6,0" Opacity="0.8" />
+                    <TextBlock Text="Task correlation: best effort" Foreground="{StaticResource MutedTextBrush}" FontSize="11" />
+                </StackPanel>
+                <TextBlock Grid.Column="3" Text="{Binding Workspace.DisplayDroppedEvents, StringFormat='Dropped: {0:N0}'}"
+                           Foreground="{StaticResource MutedTextBrush}" FontSize="11" HorizontalAlignment="Right" Margin="14,0" />
+                <TextBlock Grid.Column="4" Text="Elevated: " Foreground="{StaticResource MutedTextBrush}" FontSize="11" />
+                <TextBlock Grid.Column="5" Text="{Binding Workspace.IsElevated}" Foreground="{StaticResource TextBrush}" FontSize="11" Margin="3,0,0,0" />
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

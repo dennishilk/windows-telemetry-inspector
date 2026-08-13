@@ -1,0 +1,55 @@
+<UserControl x:Class="WindowsTelemetryInspector.Views.ProcessesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="220" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Margin="0,0,0,10">
+            <TextBlock Text="Network-active processes" Style="{StaticResource PageTitleStyle}" />
+            <TextBlock Text="Processes observed in the retained event window, ordered by transferred data." Style="{StaticResource MutedTextStyle}" />
+        </StackPanel>
+
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Rows}" SelectedItem="{Binding SelectedProcess}" AutoGenerateColumns="False"
+                  AutomationProperties.Name="Observed network-active processes">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Process" Binding="{Binding ProcessName}" Width="190" />
+                <DataGridTextColumn Header="PID" Binding="{Binding Pid}" Width="75" />
+                <DataGridTextColumn Header="Events" Binding="{Binding EventCount, StringFormat={}{0:N0}}" Width="90" />
+                <DataGridTemplateColumn Header="Sent" Width="100"><DataGridTemplateColumn.CellTemplate><DataTemplate><TextBlock Text="{Binding BytesSent, Converter={StaticResource BytesConverter}}" /></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Received" Width="100"><DataGridTemplateColumn.CellTemplate><DataTemplate><TextBlock Text="{Binding BytesReceived, Converter={StaticResource BytesConverter}}" /></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+                <DataGridTextColumn Header="Remote hosts" Binding="{Binding RemoteHostCount}" Width="105" />
+                <DataGridTextColumn Header="Associated services" Binding="{Binding Services}" Width="*" MinWidth="200" />
+                <DataGridTemplateColumn Header="Dominant category" Width="155">
+                    <DataGridTemplateColumn.CellTemplate><DataTemplate><Border Background="{Binding DominantCategory, Converter={StaticResource CategoryBrushConverter}}" CornerRadius="4" Padding="6,2" HorizontalAlignment="Left"><TextBlock Text="{Binding DominantCategory}" FontSize="11" /></Border></DataTemplate></DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <GridSplitter Grid.Row="2" Height="5" HorizontalAlignment="Stretch" Background="Transparent" ResizeDirection="Rows" />
+
+        <Border Grid.Row="3" Style="{StaticResource CardStyle}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <Grid>
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="130" /><ColumnDefinition Width="*" /><ColumnDefinition Width="130" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" /><RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.ColumnSpan="4" Text="Selected process details" Foreground="#67BEF4" FontWeight="SemiBold" Margin="0,0,0,8" />
+                    <TextBlock Grid.Row="1" Text="Executable" Style="{StaticResource DetailLabelStyle}" /><TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedProcess.Metadata.ProcessName, TargetNullValue=Select a process}" Style="{StaticResource DetailValueStyle}" />
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="User" Style="{StaticResource DetailLabelStyle}" /><TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding SelectedProcess.Metadata.User, TargetNullValue=Not available}" Style="{StaticResource DetailValueStyle}" />
+                    <TextBlock Grid.Row="2" Text="Description" Style="{StaticResource DetailLabelStyle}" /><TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedProcess.Metadata.Description, TargetNullValue=Not available}" Style="{StaticResource DetailValueStyle}" />
+                    <TextBlock Grid.Row="2" Grid.Column="2" Text="Company" Style="{StaticResource DetailLabelStyle}" /><TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding SelectedProcess.Metadata.Company, TargetNullValue=Not available}" Style="{StaticResource DetailValueStyle}" />
+                    <TextBlock Grid.Row="3" Text="Path" Style="{StaticResource DetailLabelStyle}" /><TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding SelectedProcess.Metadata.ExecutablePath, TargetNullValue=Not available}" Style="{StaticResource DetailValueStyle}" />
+                    <TextBlock Grid.Row="4" Text="Command line" Style="{StaticResource DetailLabelStyle}" /><TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding SelectedProcess.Metadata.CommandLine, TargetNullValue=Not available}" TextWrapping="Wrap" Style="{StaticResource DetailValueStyle}" />
+                    <TextBlock Grid.Row="5" Text="Parent process" Style="{StaticResource DetailLabelStyle}" /><TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding SelectedProcess.Metadata.ParentProcess, TargetNullValue=Not resolved}" Style="{StaticResource DetailValueStyle}" />
+                    <TextBlock Grid.Row="5" Grid.Column="2" Text="Integrity / signer" Style="{StaticResource DetailLabelStyle}" /><TextBlock Grid.Row="5" Grid.Column="3"><Run Text="{Binding SelectedProcess.Metadata.IntegrityLevel, TargetNullValue=Not available}" /><Run Text=" · " /><Run Text="{Binding SelectedProcess.Metadata.Signer, TargetNullValue=Not resolved}" /></TextBlock>
+                </Grid>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</UserControl>

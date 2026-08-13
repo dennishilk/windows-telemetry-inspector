@@ -1,0 +1,38 @@
+<UserControl x:Class="WindowsTelemetryInspector.Views.AboutView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid MaxWidth="900" HorizontalAlignment="Left">
+            <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,18">
+                <Border Width="76" Height="76" Background="#102A3D" CornerRadius="12" Margin="0,0,18,0">
+                    <Image Source="../Assets/WindowsTelemetryInspector.ico" Width="64" Height="64" />
+                </Border>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Windows Telemetry Inspector" FontSize="26" FontWeight="SemiBold" />
+                    <TextBlock FontSize="14" Foreground="{StaticResource MutedTextBrush}" Margin="0,5,0,0"><Run Text="Version " /><Run Text="{Binding Version}" /></TextBlock>
+                </StackPanel>
+            </StackPanel>
+
+            <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="Purpose" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,10" />
+                    <TextBlock Text="Windows Telemetry Inspector is a passive diagnostics tool for understanding which Windows processes communicate over the network, when they communicate, and how observed activity can be correlated with services, DNS responses, and nearby scheduled-task runs." TextWrapping="Wrap" LineHeight="21" />
+                    <TextBlock Text="It does not block traffic, modify packets, install a kernel driver, intercept TLS, or claim that a timing correlation proves causality." TextWrapping="Wrap" LineHeight="21" Foreground="{StaticResource WarningBrush}" Margin="0,10,0,0" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="2" Style="{StaticResource CardStyle}">
+                <Grid>
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="Open source" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,8" />
+                        <TextBlock Text="MIT License · © 2026 Dennis Hilk" />
+                        <TextBlock Text="{Binding RepositoryUrl}" Foreground="#79C7F6" Margin="0,5,0,0" />
+                    </StackPanel>
+                    <Button Grid.Column="1" Content="Open Repository" Command="{Binding OpenRepositoryCommand}" VerticalAlignment="Center" />
+                </Grid>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

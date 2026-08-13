@@ -1,0 +1,38 @@
+<UserControl x:Class="WindowsTelemetryInspector.Views.SummaryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid>
+            <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Margin="0,0,0,12">
+                <TextBlock Text="Capture summary" Style="{StaticResource PageTitleStyle}" />
+                <TextBlock Text="Aggregates are calculated from observed flow deltas; heuristic classifications retain their original confidence limits." Style="{StaticResource MutedTextStyle}" TextWrapping="Wrap" />
+            </StackPanel>
+
+            <Grid Grid.Row="1" Margin="0,0,0,12">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="*" /><ColumnDefinition Width="*" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,8,0"><StackPanel><TextBlock Text="Events" Style="{StaticResource MutedTextStyle}" /><TextBlock Text="{Binding Summary.EventCount, StringFormat={}{0:N0}}" FontSize="24" FontWeight="SemiBold" Margin="0,7,0,0" /></StackPanel></Border>
+                <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="0,0,8,0"><StackPanel><TextBlock Text="Sent" Style="{StaticResource MutedTextStyle}" /><TextBlock Text="{Binding Summary.BytesSent, Converter={StaticResource BytesConverter}}" FontSize="24" FontWeight="SemiBold" Margin="0,7,0,0" /></StackPanel></Border>
+                <Border Grid.Column="2" Style="{StaticResource CardStyle}" Margin="0,0,8,0"><StackPanel><TextBlock Text="Received" Style="{StaticResource MutedTextStyle}" /><TextBlock Text="{Binding Summary.BytesReceived, Converter={StaticResource BytesConverter}}" FontSize="24" FontWeight="SemiBold" Margin="0,7,0,0" /></StackPanel></Border>
+                <Border Grid.Column="3" Style="{StaticResource CardStyle}"><StackPanel><TextBlock Text="Duration" Style="{StaticResource MutedTextStyle}" /><TextBlock Text="{Binding Summary.Duration}" FontSize="24" FontWeight="SemiBold" Margin="0,7,0,0" /></StackPanel></Border>
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                <Grid.RowDefinitions><RowDefinition Height="310" /><RowDefinition Height="310" /></Grid.RowDefinitions>
+                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,6,6">
+                    <Grid><Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions><TextBlock Text="Top processes" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,8" /><DataGrid Grid.Row="1" ItemsSource="{Binding Summary.TopProcesses}" AutoGenerateColumns="False"><DataGrid.Columns><DataGridTextColumn Header="Process" Binding="{Binding Key}" Width="*" /><DataGridTextColumn Header="Events" Binding="{Binding Events, StringFormat={}{0:N0}}" Width="80" /><DataGridTemplateColumn Header="Traffic" Width="105"><DataGridTemplateColumn.CellTemplate><DataTemplate><TextBlock Text="{Binding TotalBytes, Converter={StaticResource BytesConverter}}" /></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn></DataGrid.Columns></DataGrid></Grid>
+                </Border>
+                <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource CardStyle}" Margin="6,0,0,6">
+                    <Grid><Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions><TextBlock Text="Top remote hosts" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,8" /><DataGrid Grid.Row="1" ItemsSource="{Binding Summary.TopRemoteHosts}" AutoGenerateColumns="False"><DataGrid.Columns><DataGridTextColumn Header="Remote host / IP" Binding="{Binding Key}" Width="*" /><DataGridTextColumn Header="Events" Binding="{Binding Events, StringFormat={}{0:N0}}" Width="80" /><DataGridTemplateColumn Header="Traffic" Width="105"><DataGridTemplateColumn.CellTemplate><DataTemplate><TextBlock Text="{Binding TotalBytes, Converter={StaticResource BytesConverter}}" /></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn></DataGrid.Columns></DataGrid></Grid>
+                </Border>
+                <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,6,6,0">
+                    <Grid><Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions><TextBlock Text="Top categories" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,8" /><DataGrid Grid.Row="1" ItemsSource="{Binding Summary.TopCategories}" AutoGenerateColumns="False"><DataGrid.Columns><DataGridTextColumn Header="Category" Binding="{Binding Key}" Width="*" /><DataGridTextColumn Header="Events" Binding="{Binding Events, StringFormat={}{0:N0}}" Width="80" /><DataGridTemplateColumn Header="Traffic" Width="105"><DataGridTemplateColumn.CellTemplate><DataTemplate><TextBlock Text="{Binding TotalBytes, Converter={StaticResource BytesConverter}}" /></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn></DataGrid.Columns></DataGrid></Grid>
+                </Border>
+                <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource CardStyle}" Margin="6,6,0,0">
+                    <Grid><Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions><TextBlock Text="Top services" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,8" /><DataGrid Grid.Row="1" ItemsSource="{Binding Summary.TopServices}" AutoGenerateColumns="False"><DataGrid.Columns><DataGridTextColumn Header="Service" Binding="{Binding Key}" Width="*" /><DataGridTextColumn Header="Events" Binding="{Binding Events, StringFormat={}{0:N0}}" Width="80" /><DataGridTemplateColumn Header="Traffic" Width="105"><DataGridTemplateColumn.CellTemplate><DataTemplate><TextBlock Text="{Binding TotalBytes, Converter={StaticResource BytesConverter}}" /></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn></DataGrid.Columns></DataGrid></Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>
