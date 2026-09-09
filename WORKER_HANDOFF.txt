@@ -1,7 +1,0 @@
-repository: dennishilk/windows-telemetry-inspector
-branch: agent/windows-desktop-gui
-local HEAD: 34cf4a39a44e3db550f425d1e9224358fb18faab
-previous commits: faff4d7, 34cf4a3
-build command: dotnet publish .\src\WindowsTelemetryInspector\WindowsTelemetryInspector.csproj -c Release -p:PublishProfile=win-x64
-reported EXE SHA-256: dbe1813f6022da6301fe4040a5bb4c99afc1ef09c55b2aeeaf05ec97e96a93c8
-note: This ZIP was created because GitHub write credentials were unavailable in the Work environment.
